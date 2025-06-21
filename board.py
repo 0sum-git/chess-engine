@@ -27,20 +27,29 @@ class board:
 
     def movePiece(self, position, new_position):
         piece = self.getPieceAt(position)
-        if piece is None:
-            raise ValueError("No piece at the starting position.")
-        possible_moves = piece.getPossibleMoves() 
-            self.setPieceAt(new_position, piece)
-            self.setPieceAt(position, None)
+        self.setPieceAt(new_position, piece)
+        self.setPieceAt(position, None)
+        if piece:
             piece.setPosition(new_position)
-        else:
-            raise ValueError("Invalid move for the piece.")
+
+    def find_piece(self, piece_type, color):
+        for r in range(8):
+            for c in range(8):
+                piece = self.getPieceAt((r, c))
+                if piece and piece.getType() == piece_type and piece.getColor() == color:
+                    return piece
+        return None
 
     def displayBoard(self):
-        for row in self.positions:
+        columns = ' '.join(f' {c} ' for c in 'abcdefgh')
+        print('   ' + columns)
+        for row_idx, row in enumerate(self.positions):
+            line_number = 8 - row_idx
+            print(f"{line_number} ", end=' ')
             for piece in row:
                 if piece is None:
-                    print(" . ", end="")
+                    print(" . ", end=' ')
                 else:
-                    print(f" {piece.getSymbol()} ", end="")
-            print("\n")
+                    print(f" {piece.getSymbol()} ", end=' ')
+            print(f" {line_number}")
+        print('   ' + columns)
